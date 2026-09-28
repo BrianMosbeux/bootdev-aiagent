@@ -7,7 +7,7 @@ schema_get_file_content = {
     "type": "function",
     "function": {
         "name": "get_file_content",
-        "description": "Return the first 10000 characters of the specified file relative to the working directory. If the file is more then 10000 characters it will be truncated.",
+        "description": f"Return the first {MAX_CHARS} characters of the specified file within the working directory. If the file is more then 10000 characters it will be truncated.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -17,6 +17,7 @@ schema_get_file_content = {
                 },
             },
         },
+        "required": ["file_path"],
     },
 }
 
