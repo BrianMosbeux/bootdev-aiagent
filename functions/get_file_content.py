@@ -3,6 +3,23 @@ from functions.utils import target_inside_working_dir
 
 MAX_CHARS = 10000
 
+schema_get_file_content = {
+    "type": "function",
+    "function": {
+        "name": "get_file_content",
+        "description": "Return the first 10000 characters of the specified file relative to the working directory. If the file is more then 10000 characters it will be truncated.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "File path to return the first 10000 characters of, relative to the working directory (default is the working directory itself)",
+                },
+            },
+        },
+    },
+}
+
 def get_file_content(working_directory: str, file_path: str) -> str:
     try:
         if not target_inside_working_dir(working_directory, file_path):
