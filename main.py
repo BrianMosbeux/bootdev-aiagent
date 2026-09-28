@@ -1,8 +1,10 @@
+import json
 import os
 import argparse
 from dotenv import load_dotenv
 from openai import OpenAI
 from prompts import system_prompt
+from call_function import available_functions
 
 
 def main():
@@ -37,7 +39,8 @@ def generate_content(client: OpenAI, messages: list[dict], verbose: bool):
     response = client.chat.completions.create(
         model="openrouter/free",
         messages=messages,
-        temperature=0
+        tools=available_functions,
+
     )
     if not response.usage:
         raise RuntimeError("Failed API request")
@@ -51,7 +54,16 @@ def generate_content(client: OpenAI, messages: list[dict], verbose: bool):
         print(f"Response tokens: {response_tokens}")
         print("Response:")
 
-    print(response.choices[0].message.content)
+    message = response.choices[0].message
+    if message.tool_calls:
+        for tool_call in message.tool_calls:
+            function_args = json.loads(tool_call.function.arguments or "{}")
+            print(f"Calling function: {tool_call.function.name}({function_args})")
+    else:
+        print(message.content)
+
+
+
 
 
 if __name__ == "__main__":
